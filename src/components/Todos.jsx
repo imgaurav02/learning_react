@@ -9,24 +9,30 @@ function Todos() {
     const [todoId,setTodoId] = useState(" ")
     const [updateText,setUpdateText] = useState("")
     const dispatch = useDispatch()
-    const handleEdit = (id) => {
-        setIsUpdate((prev) => !prev)
-        if(todoId === " "){
-            setTodoId(id)
-        }
-        if(id !== todoId){
+    const handleEdit = (id,text) => {
+        if(isUpdate){
+            dispatch(updateTodo({id: todoId, text: updateText}))
             setIsUpdate((prev) => !prev)
-            setTodoId(id)
+            setTodoId("")
+            setUpdateText("")
+            return
         }
+        setIsUpdate((prev) => !prev)
+        setTodoId(id)
+        setUpdateText(text)
     }
-    return (
+    return ( 
         <>
             {todos.map((todo) => (
                 <li key={todo.id}>
-                <input type="text" value={todo.text} style={{border: "none", textAlign: "center", fontWeight:"bold", backgroundColor: "white"}} disabled={isUpdate && todoId === todo.id  ? false : true} /> 
+                <input type="text" value={todoId === todo.id ? updateText :todo.text} onChange={(e) => {
+                    if(todoId === todo.id){
+                        return setUpdateText(e.target.value)    
+                    }
+                }} style={{border: "none", textAlign: "center", fontWeight:"bold", backgroundColor: "white"}} disabled={isUpdate && todoId === todo.id  ? false : true} /> 
                 &nbsp; &nbsp; &nbsp; 
                 <button onClick={() => dispatch(removeTodo(todo.id))}>X</button> &nbsp; &nbsp; &nbsp; 
-                <button onClick={() => handleEdit(todo.id)} >{isUpdate && todoId === todo.id? "✅" : "🥖"}</button></li>
+                <button onClick={() => handleEdit(todo.id,todo.text)} >{isUpdate && todoId === todo.id? "✅" : "🥖"}</button></li>
             ))}
             <div>Todo</div>
         </>
