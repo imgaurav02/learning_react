@@ -8,7 +8,7 @@ import Logo from "./Logo";
 import {useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
-function Signup() {
+export default function Signup() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const dispatch = useDispatch();
@@ -20,10 +20,13 @@ function Signup() {
       const userData = await authService.createAccount(data);
       if (userData) {
         const userData = await authService.getCurrentUser();
+        console.log(userData, "account created");
         if (userData) dispatch(login(userData));
+        console.log("account created redirect");
         navigate("/");
       }
     } catch (error) {
+      console.log("setting error");
       setError(error.message);
     }
   };

@@ -18,27 +18,32 @@ export class AuthService {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if(userAccount){
                 //call another method which will directly login user
+                console.log("created account");
                 this.login({email, password})
+                return userAccount
             }
             else{
                 return userAccount;
             }
         } catch (error) {
-            console.log("account creation catch : ", error);
+            throw error
         }
     }
 
     async login({email, password}){
         try {
+            console.log("logged in");
             return await this.account.createEmailSession(email, password);
         } catch (error) {
-            console.log("login catch : ", error);
+            throw error
         }
     }
 
     async getCurrentUser(){
         try {
-            return await this.account.get();
+            const currentUser = await this.account.get();
+            console.log(currentUser , "Current User");
+            return currentUser
         } catch (error) {
             console.log("getCurrentUser catch : ", error);
         }
